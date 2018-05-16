@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
-use App\Entity\Cliente;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\Cliente as Cliente;
+use App\Entity\Endereco as Endereco;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Cliente|null find($id, $lockMode = null, $lockVersion = null)
@@ -47,4 +48,15 @@ class ClienteRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+     * @param $street
+     * @return Cliente[]
+    */
+    public function findByStreet($street){        
+
+        $qb = $this->getEntityManager()->createQuery('Select c from App\Entity\Cliente c LEFT JOIN c.Endereco e Where e.rua LIKE :street');
+        $qb->setParameter('street','%'.$street.'%');
+        return $qb->execute();
+    }
 }

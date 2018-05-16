@@ -26,7 +26,7 @@ class ClienteController extends Controller
     }
 
     /**
-     * @Route("/cliente/{id}", name="cliente_id", requirements={"page"="\d+"})
+     * @Route("/cliente/{id}", name="cliente_show", requirements={"page"="\d+"})
     */
     public function show($id){     
 
@@ -128,5 +128,15 @@ class ClienteController extends Controller
         $entityManager->getManager()->flush();
 
         return new Response("Cliente removido com sucesso !");
+    }
+    /**
+     * @Route("/cliente/byStreet/{street_name}", name="cliente_show_by_street") 
+    */  
+    public function showByStreet($street_name){
+
+        $entityManager = $this->getDoctrine()->getRepository(Cliente::class); 
+        $clientes = $entityManager->findByStreet($street_name);
+    
+        return $this->json($clientes);
     }
 }
