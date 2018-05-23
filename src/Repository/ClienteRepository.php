@@ -53,8 +53,7 @@ class ClienteRepository extends ServiceEntityRepository
      * @param $street
      * @return Cliente[]
     */
-    public function findByStreet($street){        
-
+    public function findByStreet($street){
         $qb = $this->getEntityManager()->createQuery('Select c from App\Entity\Cliente c LEFT JOIN c.Endereco e Where e.rua LIKE :street');
         $qb->setParameter('street','%'.$street.'%');
         return $qb->execute();
