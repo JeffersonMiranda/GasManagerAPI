@@ -15,18 +15,17 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ClienteController extends Controller
 {
     /**
-     * @Route("/", name="cliente")
-     */
-    public function index()
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/ClienteController.php',
-        ]);
+     * @Route("/cliente/", name="cliente_show_all", methods={"get"})
+    */
+
+    public function showAll(){
+        $clientes = $this->getDoctrine()->getRepository(Cliente::class)->findAll();
+
+        return $this->json($clientes);
     }
 
     /**
-     * @Route("/cliente/{id}", name="cliente_show", requirements={"page"="\d+"})
+     * @Route("/cliente/{id}", name="cliente_show", requirements={"page"="\d+"},methods={"get"})
     */
     public function show($id){     
 
@@ -34,8 +33,7 @@ class ClienteController extends Controller
           $cliente = new Cliente();        
           $cliente = $this->getDoctrine()->getRepository(Cliente::class)->find($id); 
           if($cliente){
-            $jsonContent = $this->json($cliente);
-            return $jsonContent;   
+            return $this->json($cliente); 
           }
           else{
             throw $this->createNotFoundException('No product found for id '.$id);
@@ -86,7 +84,7 @@ class ClienteController extends Controller
     }
 
     /**
-     * @Route("/clientes", name="cliente_update",methods={"put"})
+     * @Route("/cliente", name="cliente_update",methods={"put"})
      */
     public function update(Request $request, ValidatorInterface $validator){
 
@@ -130,7 +128,7 @@ class ClienteController extends Controller
         return new Response("Cliente removido com sucesso !");
     }
     /**
-     * @Route("/cliente/byStreet/{street_name}", name="cliente_show_by_street") 
+     * @Route("/cliente/byStreet/{street_name}", name="cliente_show_by_street",methods={"get"}) 
     */  
     public function showByStreet($street_name){
 
@@ -139,4 +137,19 @@ class ClienteController extends Controller
     
         return $this->json($clientes);
     }
+
+    /**
+     * @Route("/cliente/byName/{name}", name="cliente_show_by_name",methods={"get"})
+    */
+
+    public function showByName($name){
+
+        $entityManager = $this->getDoctrine()->getRepository(Cliente::class);
+        $clientes = $entityManager->findByName($name);
+
+        return $this->json($clientes);
+
+       
+    }
+
 }
